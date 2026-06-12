@@ -1,0 +1,20 @@
+{
+  "id": "gemma-4-e2b-it-q4_k_s",
+  "engine": "llamacpp",
+  "display_name": "Gemma 4 E2B (instruct)",
+  "vendor": "Google",
+  "license": "Gemma",
+  "license_url": "https://ai.google.dev/gemma/terms",
+  "license_acknowledgement_required": true,
+  "download": {
+    "url": "https://aether-models.ufrik.com/llamacpp/gemma-4-e2b-it-q4_k_s/model.gguf",
+    "upstream_url": "https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q4_K_S.gguf",
+    "size_bytes": 3043932288,
+    "sha256": "0a2fac16f388b4839f075dedb681357aec3e73a96bd66b413e462b6853550c99"
+  },
+  "ram_min_gib": 8,
+  "context_default": 32768,
+  "mtp": {
+    "available": false
+  }
+}

@@ -1,0 +1,10 @@
+# .gguf binaries are NOT stored in this git repo.
+# Production copies live in Cloudflare R2 (see HOSTING.md).
+# Local copies are the dev cache so we don't re-download multi-GB
+# files between iterations.
+*.gguf
+*.gguf.partial
+*.mlpackage
+.cloudflare-r2
+.cloudflare*
+.wrangler/

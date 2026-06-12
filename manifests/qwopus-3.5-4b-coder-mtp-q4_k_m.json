@@ -1,0 +1,19 @@
+{
+  "id": "qwopus-3.5-4b-coder-mtp-q4_k_m",
+  "engine": "llamacpp",
+  "display_name": "Qwopus 3.5 4B Coder (MTP)",
+  "vendor": "Jackrong (community)",
+  "license": "Apache-2.0",
+  "download": {
+    "url": "https://aether-models.ufrik.com/llamacpp/qwopus-3.5-4b-coder-mtp-q4_k_m/model.gguf",
+    "upstream_url": "https://huggingface.co/Jackrong/Qwopus3.5-4B-Coder-MTP-GGUF/resolve/main/Qwopus3.5-4B-Coder-MTP-Q4_K_M.gguf",
+    "size_bytes": 2783446560,
+    "sha256": "50b426c393fc07aba6438d8f7d66bad156e06a6afb6bb80f15def9c313efa133"
+  },
+  "ram_min_gib": 16,
+  "context_default": 32768,
+  "mtp": {
+    "available": true,
+    "draft_layers_in_main_gguf": true
+  }
+}
