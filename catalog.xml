@@ -2,81 +2,56 @@
 <!--
   Aether model catalog — schema version 1.
 
-  This file is the canonical source of truth. The companion fetches
-  it on every launch (https://aether-models.ufrik.com/catalog.xml),
-  caches the last good copy at
-  ~/Library/Application Support/Aether/models-catalog.xml, and falls
-  back to the bundled copy at
-  packaging/macos/catalog/catalog.sample.xml (rust-local-ai-proxy
-  repo) if the network is unreachable.
+  Canonical source of truth for the Model Shop. Fetched at runtime by:
+    - the Rust binary   (GET /api/model-catalog → serves this to the frontend)
+    - the Swift companion (parses it directly for downloads)
 
-  All <download> URLs point at the Cloudflare R2 bucket
-  ufrik-aether-models, served via aether-models.ufrik.com. See
-  HOSTING.md for the bucket layout + upload procedure.
+  Fetch order (both consumers): R2 (https://aether-models.ufrik.com/catalog.xml)
+  → GitHub raw → on-disk cache → this bundled copy. Keep this file synchronized
+  with the R2/GitHub copy; it is only the offline fallback.
 
-  Adding a model = appending one <model> element. Removing = deleting
-  one. The companion picks up changes on the next launch — no app
-  release required. Bump <version> if you make a schema-breaking
-  change; older companions ignore entries whose min-schema-version
-  is greater than the version they understand.
+  Adding a model = appending one <model> element (and, if new, a <section>).
+  No app release required — the Shop reads whatever the XML says. Bump <version>
+  only for a schema-breaking change; models set <min-schema-version> so older
+  clients skip entries they can't understand.
+
+  SECTIONS (new in this revision): <sections> defines the groups the Model Shop
+  renders as tabs/headers, each with its own description. A model's `section`
+  attribute places it in a group. Unknown attributes/elements are ignored by the
+  Swift parser, so this stays backward-compatible.
 -->
 <aether-models>
     <version>1</version>
-    <generated-at>2026-06-19T22:45:00Z</generated-at>
+    <generated-at>2026-07-06T00:00:00Z</generated-at>
 
-    <model id="qwopus-3.5-4b-coder-mtp-q4_k_m">
-        <display-name>Qwopus 3.5 4B Coder (MTP)</display-name>
-        <tagline>Fast coding assistant with MTP speculative decoding. Recommended for ≥ 16 GB Macs.</tagline>
-        <vendor>Jackrong (community)</vendor>
+    <sections>
+        <section id="recommended" title="Recommended"
+                 description="Great starting points that run well on most Macs."/>
+        <section id="coding" title="Coding &amp; agents"
+                 description="Tuned for writing code, debugging, and tool-use workflows."/>
+        <section id="reasoning" title="Reasoning &amp; chat"
+                 description="Strong general reasoning and long-form conversation."/>
+        <section id="mtp" title="Multi-Token Prediction"
+                 description="Models with speculative decoding (MTP) for faster generation on Apple Silicon. Needs a bit more RAM for the draft head."/>
+        <section id="large" title="Large models (32 GB+)"
+                 description="High-capability models for Macs with plenty of memory."/>
+    </sections>
 
-        <engine>llamacpp</engine>
-        <min-schema-version>1</min-schema-version>
-
-        <license>Apache-2.0</license>
-        <license-url>https://huggingface.co/Jackrong/Qwopus3.5-4B-Coder-MTP-GGUF</license-url>
-        <license-acknowledgement-required>false</license-acknowledgement-required>
-
-        <download>
-            <url>https://aether-models.ufrik.com/llamacpp/qwopus-3.5-4b-coder-mtp-q4_k_m/model.gguf</url>
-            <size-bytes>2783446560</size-bytes>
-            <sha256>50b426c393fc07aba6438d8f7d66bad156e06a6afb6bb80f15def9c313efa133</sha256>
-        </download>
-
-        <runtime>
-            <loaded-ram-bytes>3221225472</loaded-ram-bytes>
-            <min-ram-gb>8</min-ram-gb>
-            <recommended-ram-gb>16</recommended-ram-gb>
-            <context-default>32768</context-default>
-            <context-max>131072</context-max>
-            <n-gpu-layers>99</n-gpu-layers>
-        </runtime>
-
-        <mtp available="true" draft-in-main-gguf="true"/>
-
-        <use-cases>
-            <case>coding</case>
-            <case>general</case>
-        </use-cases>
-    </model>
-
-    <model id="gemma-4-e2b-it-q4_k_s">
+    <model id="gemma-4-e2b-it-q4_k_s" section="recommended">
         <display-name>Gemma 4 E2B (instruct)</display-name>
         <tagline>Smallest viable generalist — runs on 8 GB Macs.</tagline>
         <vendor>Google</vendor>
-
         <engine>llamacpp</engine>
         <min-schema-version>1</min-schema-version>
-
         <license>Gemma Terms of Use</license>
         <license-url>https://ai.google.dev/gemma/terms</license-url>
         <license-acknowledgement-required>true</license-acknowledgement-required>
-
+        <model-card-url>https://huggingface.co/google/gemma-4-E2B-it</model-card-url>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/gemma-4-e2b-it-q4_k_s/model.gguf</url>
             <size-bytes>3043932288</size-bytes>
             <sha256>0a2fac16f388b4839f075dedb681357aec3e73a96bd66b413e462b6853550c99</sha256>
         </download>
-
         <runtime>
             <loaded-ram-bytes>3500000000</loaded-ram-bytes>
             <min-ram-gb>4</min-ram-gb>
@@ -85,16 +60,154 @@
             <context-max>128000</context-max>
             <n-gpu-layers>99</n-gpu-layers>
         </runtime>
-
         <mtp available="false"/>
-
-        <use-cases>
-            <case>general</case>
-            <case>summarisation</case>
-        </use-cases>
+        <use-cases><case>general</case><case>summarisation</case></use-cases>
     </model>
 
-    <model id="qwopus-3.6-35b-a3b-v1-q4_k_s">
+    <model id="lfm2.5-8b-a1b-q4_k_m" section="recommended">
+        <display-name>LFM2.5 8B A1B</display-name>
+        <tagline>Liquid AI edge model — fast &amp; light, ~1B active params. 8 languages.</tagline>
+        <vendor>Liquid AI</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <license>lfm1.0</license>
+        <license-url>https://huggingface.co/LiquidAI/LFM2.5-8B-A1B-GGUF</license-url>
+        <license-acknowledgement-required>false</license-acknowledgement-required>
+        <model-card-url>https://huggingface.co/LiquidAI/LFM2.5-8B-A1B-GGUF</model-card-url>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/lfm2.5-8b-a1b-q4_k_m/model.gguf</url>
+            <size-bytes>5155564768</size-bytes>
+            <sha256>4923ec14f06b968b74d663e5949867d2d9c3bf13a20b8be1a9f9af39989b2bb0</sha256>
+        </download>
+        <runtime>
+            <loaded-ram-bytes>6000000000</loaded-ram-bytes>
+            <min-ram-gb>8</min-ram-gb>
+            <recommended-ram-gb>16</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>128000</context-max>
+            <n-gpu-layers>99</n-gpu-layers>
+        </runtime>
+        <mtp available="false"/>
+        <use-cases><case>general</case><case>multilingual</case></use-cases>
+    </model>
+
+    <model id="ornith-1.0-9b-q4_k_m" section="coding">
+        <display-name>Ornith 1.0 9B</display-name>
+        <tagline>Lightweight agentic coder (Qwen3.5). SWE-Bench Verified 69.4%. Reasoning model.</tagline>
+        <vendor>DeepReinforce AI</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <license>MIT</license>
+        <license-url>https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B-GGUF</license-url>
+        <license-acknowledgement-required>false</license-acknowledgement-required>
+        <model-card-url>https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B-GGUF</model-card-url>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/ornith-1.0-9b-q4_k_m/model.gguf</url>
+            <size-bytes>5629108704</size-bytes>
+            <sha256>5720d1f671b4996481274fffe01868c3c36e87c135cc8538471cc7bd6087b106</sha256>
+        </download>
+        <runtime>
+            <loaded-ram-bytes>7000000000</loaded-ram-bytes>
+            <min-ram-gb>8</min-ram-gb>
+            <recommended-ram-gb>16</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>262144</context-max>
+            <n-gpu-layers>99</n-gpu-layers>
+            <temperature>0.6</temperature>
+            <top-p>0.95</top-p>
+            <top-k>20</top-k>
+        </runtime>
+        <mtp available="false"/>
+        <use-cases><case>coding</case><case>reasoning</case></use-cases>
+    </model>
+
+    <model id="qwopus-3.5-4b-coder-mtp-q4_k_m" section="mtp">
+        <display-name>Qwopus 3.5 4B Coder (MTP)</display-name>
+        <tagline>Fast coding assistant with MTP speculative decoding. Great on ≥ 16 GB Macs.</tagline>
+        <vendor>Jackrong (community)</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <license>Apache-2.0</license>
+        <license-url>https://huggingface.co/Jackrong/Qwopus3.5-4B-Coder-MTP-GGUF</license-url>
+        <license-acknowledgement-required>false</license-acknowledgement-required>
+        <model-card-url>https://huggingface.co/Jackrong/Qwopus3.5-4B-Coder-MTP-GGUF</model-card-url>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/qwopus-3.5-4b-coder-mtp-q4_k_m/model.gguf</url>
+            <size-bytes>2783446560</size-bytes>
+            <sha256>50b426c393fc07aba6438d8f7d66bad156e06a6afb6bb80f15def9c313efa133</sha256>
+        </download>
+        <runtime>
+            <loaded-ram-bytes>3221225472</loaded-ram-bytes>
+            <min-ram-gb>8</min-ram-gb>
+            <recommended-ram-gb>16</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>131072</context-max>
+            <n-gpu-layers>99</n-gpu-layers>
+        </runtime>
+        <mtp available="true" draft-in-main-gguf="true"/>
+        <use-cases><case>coding</case><case>general</case></use-cases>
+    </model>
+
+    <model id="qwythos-9b-claude-mythos-5-1m-q4_k_m" section="reasoning">
+        <display-name>Qwythos 9B — Claude Mythos 5 (1M)</display-name>
+        <tagline>Uncensored full-parameter reasoning model — a Qwen3.5-9B base post-trained on 500M+ Claude Mythos &amp; Fable traces. 1M-token context, native function calling, and self-correcting tool use. Engages seriously with cybersecurity, biology, pharmacology, and clinical questions where over-aligned models refuse.</tagline>
+        <vendor>Empero AI</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <license>Apache-2.0</license>
+        <license-url>https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF</license-url>
+        <license-acknowledgement-required>false</license-acknowledgement-required>
+        <model-card-url>https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF</model-card-url>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/qwythos-9b-claude-mythos-5-1m-q4_k_m/model.gguf</url>
+            <size-bytes>5629109152</size-bytes>
+            <sha256>88c75f5a2684d07ac4b08e47f06cf6f65045072b1aeb29b33cf50cdae2d8cea1</sha256>
+        </download>
+        <runtime>
+            <loaded-ram-bytes>7000000000</loaded-ram-bytes>
+            <min-ram-gb>8</min-ram-gb>
+            <recommended-ram-gb>16</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>262144</context-max>
+            <n-gpu-layers>99</n-gpu-layers>
+            <temperature>0.6</temperature>
+            <top-p>0.95</top-p>
+            <top-k>20</top-k>
+        </runtime>
+        <mtp available="false"/>
+        <use-cases><case>reasoning</case><case>chat</case><case>long-context</case></use-cases>
+    </model>
+
+    <model id="ornith-1.0-35b-q4_k_m" section="large">
+        <display-name>Ornith 1.0 35B (A3B)</display-name>
+        <tagline>Sparse MoE (256 experts / 8 active) with hybrid SSM+attention. Big brains, modest active cost. 256K context.</tagline>
+        <vendor>DeepReinforce AI</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <license>MIT</license>
+        <license-url>https://huggingface.co/deepreinforce-ai</license-url>
+        <license-acknowledgement-required>false</license-acknowledgement-required>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/ornith-1.0-35b-q4_k_m/model.gguf</url>
+            <size-bytes>21166757760</size-bytes>
+            <sha256>ff25291b2599fb927a835e624d2b3540106af61761c3fa57ac4264046dbec002</sha256>
+        </download>
+        <runtime>
+            <loaded-ram-bytes>24000000000</loaded-ram-bytes>
+            <min-ram-gb>32</min-ram-gb>
+            <recommended-ram-gb>48</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>262144</context-max>
+            <n-gpu-layers>-1</n-gpu-layers>
+            <flash-attention>true</flash-attention>
+            <cache-type-k>q8_0</cache-type-k>
+            <cache-type-v>q8_0</cache-type-v>
+        </runtime>
+        <mtp available="false"/>
+        <use-cases><case>reasoning</case><case>coding</case><case>general</case></use-cases>
+    </model>
+
+    <model id="qwopus-3.6-35b-a3b-v1-q4_k_s" section="large">
         <display-name>Qwopus 3.6 35B-A3B</display-name>
         <tagline>High-capability coding model tuned and verified for 32 GB Apple Silicon Macs.</tagline>
         <vendor>Qwopus community / Unsloth base</vendor>
@@ -103,6 +216,7 @@
         <license>Apache-2.0</license>
         <license-url>https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF</license-url>
         <license-acknowledgement-required>false</license-acknowledgement-required>
+        <model-card-url>https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF</model-card-url>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/qwopus-3.6-35b-a3b-v1-q4_k_s/model.gguf</url>
             <size-bytes>19889904000</size-bytes>
@@ -129,22 +243,19 @@
             <min-p>0.0</min-p>
         </runtime>
         <mtp available="false"/>
-        <use-cases>
-            <case>coding</case>
-            <case>reasoning</case>
-            <case>general</case>
-        </use-cases>
+        <use-cases><case>coding</case><case>reasoning</case><case>general</case></use-cases>
     </model>
 
-    <model id="gemma-4-26b-a4b-it-ud-iq2_m">
+    <model id="gemma-4-26b-a4b-it-ud-iq2_m" section="large">
         <display-name>Gemma 4 26B-A4B (instruct)</display-name>
-        <tagline>Large generalist model for 32 GB Macs, with a compact IQ2 quantization.</tagline>
+        <tagline>Large generalist for 32 GB Macs, compact IQ2 quantization.</tagline>
         <vendor>Google / Unsloth community quant</vendor>
         <engine>llamacpp</engine>
         <min-schema-version>1</min-schema-version>
         <license>Gemma Terms of Use</license>
         <license-url>https://ai.google.dev/gemma/terms</license-url>
         <license-acknowledgement-required>true</license-acknowledgement-required>
+        <model-card-url>https://huggingface.co/unsloth/gemma-4-26b-a4b-it-GGUF</model-card-url>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/gemma-4-26b-a4b-it-ud-iq2_m/model.gguf</url>
             <size-bytes>9974938368</size-bytes>
@@ -159,14 +270,10 @@
             <n-gpu-layers>-1</n-gpu-layers>
         </runtime>
         <mtp available="false"/>
-        <use-cases>
-            <case>general</case>
-            <case>reasoning</case>
-            <case>summarisation</case>
-        </use-cases>
+        <use-cases><case>general</case><case>reasoning</case><case>summarisation</case></use-cases>
     </model>
 
-    <model id="bonsai-27b-q1_0">
+    <model id="bonsai-27b-q1_0" section="coding">
         <display-name>Bonsai 27B (1-bit)</display-name>
         <tagline>A full 27B mind in 3.8 GB — true 1-bit ternary Qwen3.6-27B. Runs on mainstream laptops.</tagline>
         <vendor>prism-ml</vendor>
@@ -176,6 +283,7 @@
         <license>Apache-2.0</license>
         <license-url>https://huggingface.co/prism-ml/Bonsai-27B-gguf</license-url>
         <license-acknowledgement-required>false</license-acknowledgement-required>
+        <model-card-url>https://huggingface.co/prism-ml/Bonsai-27B-gguf</model-card-url>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/bonsai-27b-q1_0/model.gguf</url>
             <size-bytes>3803452480</size-bytes>
@@ -202,13 +310,6 @@
             <min-p>0.0</min-p>
         </runtime>
         <mtp available="false"/>
-        <use-cases>
-            <case>reasoning</case>
-            <case>coding</case>
-            <case>general</case>
-        </use-cases>
+        <use-cases><case>coding</case><case>reasoning</case><case>general</case></use-cases>
     </model>
-
-    <!-- Add models with upload-to-r2.sh, then keep the bundled fallback
-         in packaging/macos/catalog synchronized with this catalog. -->
 </aether-models>
