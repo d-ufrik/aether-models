@@ -1,68 +1,214 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Aether — model catalog (v1)
+  Aether model catalog — schema version 1.
 
-  This file is the source of truth for the models Aether.app offers
-  on first launch. It is fetched live from
-  https://aether.ufrik.com/models/catalog.xml on every launch (with
-  on-disk caching). A copy is bundled into the app at
-  packaging/macos/catalog/catalog.sample.xml as the offline fallback.
+  This file is the canonical source of truth. The companion fetches
+  it on every launch (https://aether-models.ufrik.com/catalog.xml),
+  caches the last good copy at
+  ~/Library/Application Support/Aether/models-catalog.xml, and falls
+  back to the bundled copy at
+  packaging/macos/catalog/catalog.sample.xml (rust-local-ai-proxy
+  repo) if the network is unreachable.
 
-  Schema:
-    <catalog schema-version="1">
-      <model id="...">
-        <display-name>...</display-name>
-        <vendor>...</vendor>
-        <engine>llamacpp | mlx | mtplx</engine>
-        <license>...</license>
-        <license-url>...</license-url>
-        <license-acknowledgement-required>true|false</license-acknowledgement-required>
-        <download>
-          <url>https://aether-models.ufrik.com/...</url>
-          <size-bytes>...</size-bytes>
-          <sha256>...</sha256>
-        </download>
-        <ram-min-gib>...</ram-min-gib>
-        <context-default>...</context-default>
-        <mtp available="true|false" draft-in-main-gguf="true|false"/>
-      </model>
-    </catalog>
+  All <download> URLs point at the Cloudflare R2 bucket
+  ufrik-aether-models, served via aether-models.ufrik.com. See
+  HOSTING.md for the bucket layout + upload procedure.
+
+  Adding a model = appending one <model> element. Removing = deleting
+  one. The companion picks up changes on the next launch — no app
+  release required. Bump <version> if you make a schema-breaking
+  change; older companions ignore entries whose min-schema-version
+  is greater than the version they understand.
 -->
-<catalog schema-version="1">
+<aether-models>
+    <version>1</version>
+    <generated-at>2026-06-19T22:45:00Z</generated-at>
 
     <model id="qwopus-3.5-4b-coder-mtp-q4_k_m">
         <display-name>Qwopus 3.5 4B Coder (MTP)</display-name>
-        <tagline>Fast coding assistant with MTP speculative decoding. Default for ≥ 16 GB Macs.</tagline>
+        <tagline>Fast coding assistant with MTP speculative decoding. Recommended for ≥ 16 GB Macs.</tagline>
         <vendor>Jackrong (community)</vendor>
+
         <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+
         <license>Apache-2.0</license>
+        <license-url>https://huggingface.co/Jackrong/Qwopus3.5-4B-Coder-MTP-GGUF</license-url>
         <license-acknowledgement-required>false</license-acknowledgement-required>
+
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/qwopus-3.5-4b-coder-mtp-q4_k_m/model.gguf</url>
             <size-bytes>2783446560</size-bytes>
             <sha256>50b426c393fc07aba6438d8f7d66bad156e06a6afb6bb80f15def9c313efa133</sha256>
         </download>
-        <ram-min-gib>16</ram-min-gib>
-        <context-default>32768</context-default>
+
+        <runtime>
+            <loaded-ram-bytes>3221225472</loaded-ram-bytes>
+            <min-ram-gb>8</min-ram-gb>
+            <recommended-ram-gb>16</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>131072</context-max>
+            <n-gpu-layers>99</n-gpu-layers>
+        </runtime>
+
         <mtp available="true" draft-in-main-gguf="true"/>
+
+        <use-cases>
+            <case>coding</case>
+            <case>general</case>
+        </use-cases>
     </model>
 
     <model id="gemma-4-e2b-it-q4_k_s">
         <display-name>Gemma 4 E2B (instruct)</display-name>
         <tagline>Smallest viable generalist — runs on 8 GB Macs.</tagline>
         <vendor>Google</vendor>
+
         <engine>llamacpp</engine>
-        <license>Gemma</license>
+        <min-schema-version>1</min-schema-version>
+
+        <license>Gemma Terms of Use</license>
         <license-url>https://ai.google.dev/gemma/terms</license-url>
         <license-acknowledgement-required>true</license-acknowledgement-required>
+
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/gemma-4-e2b-it-q4_k_s/model.gguf</url>
             <size-bytes>3043932288</size-bytes>
             <sha256>0a2fac16f388b4839f075dedb681357aec3e73a96bd66b413e462b6853550c99</sha256>
         </download>
-        <ram-min-gib>8</ram-min-gib>
-        <context-default>32768</context-default>
+
+        <runtime>
+            <loaded-ram-bytes>3500000000</loaded-ram-bytes>
+            <min-ram-gb>4</min-ram-gb>
+            <recommended-ram-gb>8</recommended-ram-gb>
+            <context-default>8192</context-default>
+            <context-max>128000</context-max>
+            <n-gpu-layers>99</n-gpu-layers>
+        </runtime>
+
         <mtp available="false"/>
+
+        <use-cases>
+            <case>general</case>
+            <case>summarisation</case>
+        </use-cases>
     </model>
 
-</catalog>
+    <model id="qwopus-3.6-35b-a3b-v1-q4_k_s">
+        <display-name>Qwopus 3.6 35B-A3B</display-name>
+        <tagline>High-capability coding model tuned and verified for 32 GB Apple Silicon Macs.</tagline>
+        <vendor>Qwopus community / Unsloth base</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <license>Apache-2.0</license>
+        <license-url>https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF</license-url>
+        <license-acknowledgement-required>false</license-acknowledgement-required>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/qwopus-3.6-35b-a3b-v1-q4_k_s/model.gguf</url>
+            <size-bytes>19889904000</size-bytes>
+            <sha256>3c6350992329b471d47c900126bb1a8e76416d1c59f68b8771506f2ea7f18100</sha256>
+        </download>
+        <runtime>
+            <loaded-ram-bytes>22548578304</loaded-ram-bytes>
+            <min-ram-gb>32</min-ram-gb>
+            <recommended-ram-gb>32</recommended-ram-gb>
+            <context-default>98304</context-default>
+            <context-max>262144</context-max>
+            <n-gpu-layers>-1</n-gpu-layers>
+            <server-variant>mainline</server-variant>
+            <cache-type-k>q4_0</cache-type-k>
+            <cache-type-v>q4_0</cache-type-v>
+            <parallel-slots>1</parallel-slots>
+            <threads>8</threads>
+            <flash-attention>true</flash-attention>
+            <jinja>true</jinja>
+            <metrics>true</metrics>
+            <temperature>0.6</temperature>
+            <top-p>0.95</top-p>
+            <top-k>20</top-k>
+            <min-p>0.0</min-p>
+        </runtime>
+        <mtp available="false"/>
+        <use-cases>
+            <case>coding</case>
+            <case>reasoning</case>
+            <case>general</case>
+        </use-cases>
+    </model>
+
+    <model id="gemma-4-26b-a4b-it-ud-iq2_m">
+        <display-name>Gemma 4 26B-A4B (instruct)</display-name>
+        <tagline>Large generalist model for 32 GB Macs, with a compact IQ2 quantization.</tagline>
+        <vendor>Google / Unsloth community quant</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <license>Gemma Terms of Use</license>
+        <license-url>https://ai.google.dev/gemma/terms</license-url>
+        <license-acknowledgement-required>true</license-acknowledgement-required>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/gemma-4-26b-a4b-it-ud-iq2_m/model.gguf</url>
+            <size-bytes>9974938368</size-bytes>
+            <sha256>5dd716a53e80db081ace2d4683887f76ad806e04bb6cd4551cb7699da3cf6bcc</sha256>
+        </download>
+        <runtime>
+            <loaded-ram-bytes>12884901888</loaded-ram-bytes>
+            <min-ram-gb>16</min-ram-gb>
+            <recommended-ram-gb>32</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>131072</context-max>
+            <n-gpu-layers>-1</n-gpu-layers>
+        </runtime>
+        <mtp available="false"/>
+        <use-cases>
+            <case>general</case>
+            <case>reasoning</case>
+            <case>summarisation</case>
+        </use-cases>
+    </model>
+
+    <model id="bonsai-27b-q1_0">
+        <display-name>Bonsai 27B (1-bit)</display-name>
+        <tagline>A full 27B mind in 3.8 GB — true 1-bit ternary Qwen3.6-27B. Runs on mainstream laptops.</tagline>
+        <vendor>prism-ml</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <released-at>2026-07-14T00:00:00Z</released-at>
+        <license>Apache-2.0</license>
+        <license-url>https://huggingface.co/prism-ml/Bonsai-27B-gguf</license-url>
+        <license-acknowledgement-required>false</license-acknowledgement-required>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/bonsai-27b-q1_0/model.gguf</url>
+            <size-bytes>3803452480</size-bytes>
+            <sha256>17ef842e47450caeb8eaa3ebfbbab5d2f2278b62b79be107985fb69a2f819aa0</sha256>
+        </download>
+        <runtime>
+            <loaded-ram-bytes>4089446400</loaded-ram-bytes>
+            <min-ram-gb>16</min-ram-gb>
+            <recommended-ram-gb>16</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>262144</context-max>
+            <n-gpu-layers>-1</n-gpu-layers>
+            <server-variant>mainline</server-variant>
+            <cache-type-k>q4_0</cache-type-k>
+            <cache-type-v>q4_0</cache-type-v>
+            <parallel-slots>1</parallel-slots>
+            <threads>8</threads>
+            <flash-attention>true</flash-attention>
+            <jinja>true</jinja>
+            <metrics>true</metrics>
+            <temperature>0.7</temperature>
+            <top-p>0.95</top-p>
+            <top-k>20</top-k>
+            <min-p>0.0</min-p>
+        </runtime>
+        <mtp available="false"/>
+        <use-cases>
+            <case>reasoning</case>
+            <case>coding</case>
+            <case>general</case>
+        </use-cases>
+    </model>
+
+    <!-- Add models with upload-to-r2.sh, then keep the bundled fallback
+         in packaging/macos/catalog synchronized with this catalog. -->
+</aether-models>
