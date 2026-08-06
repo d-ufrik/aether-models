@@ -22,9 +22,11 @@
 -->
 <aether-models>
     <version>1</version>
-    <generated-at>2026-07-06T00:00:00Z</generated-at>
+    <generated-at>2026-08-05T01:05:00Z</generated-at>
 
     <sections>
+        <section id="new" title="New"
+                 description="Just added to the Model Shop, newest first."/>
         <section id="recommended" title="Recommended"
                  description="Great starting points that run well on most Macs."/>
         <section id="coding" title="Coding &amp; agents"
@@ -47,6 +49,7 @@
         <license-url>https://ai.google.dev/gemma/terms</license-url>
         <license-acknowledgement-required>true</license-acknowledgement-required>
         <model-card-url>https://huggingface.co/google/gemma-4-E2B-it</model-card-url>
+        <released-at>2026-07-16T00:00:00Z</released-at>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/gemma-4-e2b-it-q4_k_s/model.gguf</url>
             <size-bytes>3043932288</size-bytes>
@@ -74,6 +77,7 @@
         <license-url>https://huggingface.co/LiquidAI/LFM2.5-8B-A1B-GGUF</license-url>
         <license-acknowledgement-required>false</license-acknowledgement-required>
         <model-card-url>https://huggingface.co/LiquidAI/LFM2.5-8B-A1B-GGUF</model-card-url>
+        <released-at>2026-06-26T00:00:00Z</released-at>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/lfm2.5-8b-a1b-q4_k_m/model.gguf</url>
             <size-bytes>5155564768</size-bytes>
@@ -101,6 +105,7 @@
         <license-url>https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B-GGUF</license-url>
         <license-acknowledgement-required>false</license-acknowledgement-required>
         <model-card-url>https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B-GGUF</model-card-url>
+        <released-at>2026-06-26T00:00:00Z</released-at>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/ornith-1.0-9b-q4_k_m/model.gguf</url>
             <size-bytes>5629108704</size-bytes>
@@ -131,6 +136,7 @@
         <license-url>https://huggingface.co/Jackrong/Qwopus3.5-4B-Coder-MTP-GGUF</license-url>
         <license-acknowledgement-required>false</license-acknowledgement-required>
         <model-card-url>https://huggingface.co/Jackrong/Qwopus3.5-4B-Coder-MTP-GGUF</model-card-url>
+        <released-at>2026-07-16T00:00:00Z</released-at>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/qwopus-3.5-4b-coder-mtp-q4_k_m/model.gguf</url>
             <size-bytes>2783446560</size-bytes>
@@ -148,6 +154,53 @@
         <use-cases><case>coding</case><case>general</case></use-cases>
     </model>
 
+    <model id="lfm2.5-2.6b-q4_k_m" section="reasoning">
+        <display-name>LFM2.5 2.6B Reasoning</display-name>
+        <tagline>Liquid AI dense reasoning model — always thinks before answering. Built for agentic workloads, tool use, RAG and long context; competitive with models 4x larger on tool use. ~53 tok/s on M4, ~30 on M1. Only 1.6 GB.</tagline>
+        <vendor>Liquid AI</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <license>lfm1.0</license>
+        <license-url>https://huggingface.co/LiquidAI/LFM2.5-2.6B-GGUF</license-url>
+        <license-acknowledgement-required>false</license-acknowledgement-required>
+        <model-card-url>https://huggingface.co/LiquidAI/LFM2.5-2.6B-GGUF</model-card-url>
+        <released-at>2026-08-04T00:00:00Z</released-at>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/lfm2.5-2.6b-q4_k_m/model.gguf</url>
+            <size-bytes>1674454848</size-bytes>
+            <sha256>79fdf00351b46cf26f020aead28d01889886be87c55fa0eb907e6f9b00bfee14</sha256>
+        </download>
+        <runtime>
+            <!-- Measured RSS 2026-08-04, not estimated: 1.97 GB on M2 and M4,
+                 2.07 GB on M1 at the 32768 default; 2.96 GB on M3 Ultra at 128K. -->
+            <loaded-ram-bytes>2100000000</loaded-ram-bytes>
+            <min-ram-gb>8</min-ram-gb>
+            <recommended-ram-gb>16</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>128000</context-max>
+            <n-gpu-layers>99</n-gpu-layers>
+            <server-variant>mainline</server-variant>
+            <cache-type-k>q8_0</cache-type-k>
+            <cache-type-v>q8_0</cache-type-v>
+            <parallel-slots>1</parallel-slots>
+            <flash-attention>true</flash-attention>
+            <jinja>true</jinja>
+            <metrics>true</metrics>
+            <!-- Liquid AI's published generation settings. This model is
+                 sensitive to them: the Qwen-style defaults (temp 0.6 /
+                 top_k 20 / top_p 0.95, no repeat penalty) make it ramble.
+                 repeat-penalty requires companion >= the build that added
+                 CatalogRuntimePreset.repeatPenalty; older companions ignore
+                 the unknown element and fall back to their own default. -->
+            <temperature>0.1</temperature>
+            <top-p>1.0</top-p>
+            <top-k>50</top-k>
+            <min-p>0.0</min-p>
+            <repeat-penalty>1.1</repeat-penalty>
+        </runtime>
+        <mtp available="false"/>
+        <use-cases><case>reasoning</case><case>agents</case><case>tool-use</case><case>long-context</case></use-cases>
+    </model>
     <model id="qwythos-9b-claude-mythos-5-1m-q4_k_m" section="reasoning">
         <display-name>Qwythos 9B — Claude Mythos 5 (1M)</display-name>
         <tagline>Uncensored full-parameter reasoning model — a Qwen3.5-9B base post-trained on 500M+ Claude Mythos &amp; Fable traces. 1M-token context, native function calling, and self-correcting tool use. Engages seriously with cybersecurity, biology, pharmacology, and clinical questions where over-aligned models refuse.</tagline>
@@ -158,6 +211,7 @@
         <license-url>https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF</license-url>
         <license-acknowledgement-required>false</license-acknowledgement-required>
         <model-card-url>https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF</model-card-url>
+        <released-at>2026-07-06T00:00:00Z</released-at>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/qwythos-9b-claude-mythos-5-1m-q4_k_m/model.gguf</url>
             <size-bytes>5629109152</size-bytes>
@@ -187,6 +241,7 @@
         <license>MIT</license>
         <license-url>https://huggingface.co/deepreinforce-ai</license-url>
         <license-acknowledgement-required>false</license-acknowledgement-required>
+        <released-at>2026-06-25T00:00:00Z</released-at>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/ornith-1.0-35b-q4_k_m/model.gguf</url>
             <size-bytes>21166757760</size-bytes>
@@ -217,6 +272,7 @@
         <license-url>https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF</license-url>
         <license-acknowledgement-required>false</license-acknowledgement-required>
         <model-card-url>https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF</model-card-url>
+        <released-at>2026-06-15T00:00:00Z</released-at>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/qwopus-3.6-35b-a3b-v1-q4_k_s/model.gguf</url>
             <size-bytes>19889904000</size-bytes>
@@ -256,6 +312,7 @@
         <license-url>https://ai.google.dev/gemma/terms</license-url>
         <license-acknowledgement-required>true</license-acknowledgement-required>
         <model-card-url>https://huggingface.co/unsloth/gemma-4-26b-a4b-it-GGUF</model-card-url>
+        <released-at>2026-04-02T00:00:00Z</released-at>
         <download>
             <url>https://aether-models.ufrik.com/llamacpp/gemma-4-26b-a4b-it-ud-iq2_m/model.gguf</url>
             <size-bytes>9974938368</size-bytes>
@@ -311,5 +368,38 @@
         </runtime>
         <mtp available="false"/>
         <use-cases><case>coding</case><case>reasoning</case><case>general</case></use-cases>
+    </model>
+
+    <model id="agents-a1-4b-q4_k_m" section="coding">
+        <display-name>Agents A1 4B</display-name>
+        <tagline>Long-horizon agentic reasoner from Shanghai AI Lab — built for multi-step planning, tool use, and scientific research, not just chat. Punches far above its 4B weight: GAIA 95.1, IFEval 94.8, BrowseComp 66.8, approaching much larger MoE models. 256K context, native function calling — and only 2.7 GB.</tagline>
+        <vendor>InternScience (Shanghai AI Laboratory)</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <released-at>2026-07-20T00:00:00Z</released-at>
+        <license>Apache-2.0</license>
+        <license-url>https://huggingface.co/InternScience/Agents-A1-4B-Q4_K_M-GGUF</license-url>
+        <license-acknowledgement-required>false</license-acknowledgement-required>
+        <model-card-url>https://huggingface.co/InternScience/Agents-A1-4B-Q4_K_M-GGUF</model-card-url>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/agents-a1-4b-q4_k_m/model.gguf</url>
+            <size-bytes>2708805312</size-bytes>
+            <sha256>d93c393a9bd5139a4b5cfe24d31ef553c5a497bfb8afec178a354ecbf508f062</sha256>
+        </download>
+        <runtime>
+            <loaded-ram-bytes>3500000000</loaded-ram-bytes>
+            <min-ram-gb>8</min-ram-gb>
+            <recommended-ram-gb>16</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>262144</context-max>
+            <n-gpu-layers>99</n-gpu-layers>
+            <jinja>true</jinja>
+            <temperature>0.85</temperature>
+            <top-p>0.95</top-p>
+            <top-k>20</top-k>
+            <min-p>0.0</min-p>
+        </runtime>
+        <mtp available="false"/>
+        <use-cases><case>agents</case><case>reasoning</case><case>tool-use</case></use-cases>
     </model>
 </aether-models>
