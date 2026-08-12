@@ -22,7 +22,7 @@
 -->
 <aether-models>
     <version>1</version>
-    <generated-at>2026-08-05T01:05:00Z</generated-at>
+    <generated-at>2026-08-11T00:00:00Z</generated-at>
 
     <sections>
         <section id="new" title="New"
@@ -154,6 +154,46 @@
         <use-cases><case>coding</case><case>general</case></use-cases>
     </model>
 
+    <model id="muse-glimmer-30b-q4_k_xl" section="new">
+        <display-name>Muse Glimmer 30B</display-name>
+        <tagline>Meta's open agentic model — 30B dense, built to run on consumer hardware. Tool use, multi-step reasoning, 130K context. Needs a 24 GB Mac.</tagline>
+        <vendor>Meta Superintelligence Lab</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <license>Apache-2.0</license>
+        <license-url>https://huggingface.co/unsloth/Muse-Glimmer-30B-GGUF</license-url>
+        <license-acknowledgement-required>false</license-acknowledgement-required>
+        <model-card-url>https://huggingface.co/unsloth/Muse-Glimmer-30B-GGUF</model-card-url>
+        <released-at>2026-08-11T00:00:00Z</released-at>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/muse-glimmer-30b/Muse-Glimmer-30B-UD-Q4_K_XL.gguf</url>
+            <size-bytes>15878222368</size-bytes>
+            <sha256>82bece304887a313ece08400bc030f6066c7bff5b906b0cd40308ec8a409fd38</sha256>
+        </download>
+        <runtime>
+            <!-- 24 GB floor is deliberate: 14.8 GiB of weights plus a 130K f16 KV
+                 cache. The 16:1 GQA keeps that cache small enough that KV
+                 quantisation is NOT needed — do not add cache-type-k/v here. -->
+            <loaded-ram-bytes>20400000000</loaded-ram-bytes>
+            <min-ram-gb>24</min-ram-gb>
+            <recommended-ram-gb>32</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>131072</context-max>
+            <n-gpu-layers>99</n-gpu-layers>
+            <server-variant>mainline</server-variant>
+            <parallel-slots>1</parallel-slots>
+            <flash-attention>true</flash-attention>
+            <jinja>true</jinja>
+            <metrics>true</metrics>
+            <!-- Meta's published defaults. Note temperature 1.0 — much higher
+                 than the other models here; it is correct, do not "fix" it. -->
+            <temperature>1.0</temperature>
+            <top-p>0.95</top-p>
+            <top-k>64</top-k>
+        </runtime>
+        <mtp available="false"/>
+        <use-cases><case>agents</case><case>tool-use</case><case>reasoning</case><case>long-context</case></use-cases>
+    </model>
     <model id="lfm2.5-2.6b-q4_k_m" section="reasoning">
         <display-name>LFM2.5 2.6B Reasoning</display-name>
         <tagline>Liquid AI dense reasoning model — always thinks before answering. Built for agentic workloads, tool use, RAG and long context; competitive with models 4x larger on tool use. ~53 tok/s on M4, ~30 on M1. Only 1.6 GB.</tagline>
