@@ -1,0 +1,13 @@
+{
+  "id": "ornith-1.5-9b-q4_k_m",
+  "engine": "llamacpp",
+  "display_name": "Ornith-1.5 9B (Q4_K_M)",
+  "license": "MIT",
+  "download": {
+    "url": "https://aether-models.ufrik.com/llamacpp/ornith-1.5-9b-q4_k_m/model.gguf",
+    "size_bytes": 5629108992,
+    "sha256": "7d791afcb31812acc88cd5aafc675391df28c6fc3d8eae002bb4e6cc3d8cfd8d"
+  },
+  "ram_min_gib": 8,
+  "context_default": 32768
+}

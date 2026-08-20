@@ -126,6 +126,37 @@
         <use-cases><case>coding</case><case>reasoning</case></use-cases>
     </model>
 
+    <model id="ornith-1.5-9b-q4_k_m" section="new">
+        <display-name>Ornith-1.5 9B</display-name>
+        <tagline>Reasoning + coding through self-play. SWE-Bench Verified 70.6%, GPQA Diamond 86.4. MIT.</tagline>
+        <vendor>Ornith AI</vendor>
+        <engine>llamacpp</engine>
+        <min-schema-version>1</min-schema-version>
+        <license>MIT</license>
+        <license-url>https://huggingface.co/ornith-ai/Ornith-1.5-9B-GGUF</license-url>
+        <license-acknowledgement-required>false</license-acknowledgement-required>
+        <model-card-url>https://huggingface.co/ornith-ai/Ornith-1.5-9B-GGUF</model-card-url>
+        <released-at>2026-08-19T00:00:00Z</released-at>
+        <download>
+            <url>https://aether-models.ufrik.com/llamacpp/ornith-1.5-9b-q4_k_m/model.gguf</url>
+            <size-bytes>5629108992</size-bytes>
+            <sha256>7d791afcb31812acc88cd5aafc675391df28c6fc3d8eae002bb4e6cc3d8cfd8d</sha256>
+        </download>
+        <runtime>
+            <loaded-ram-bytes>7000000000</loaded-ram-bytes>
+            <min-ram-gb>8</min-ram-gb>
+            <recommended-ram-gb>16</recommended-ram-gb>
+            <context-default>32768</context-default>
+            <context-max>262144</context-max>
+            <n-gpu-layers>99</n-gpu-layers>
+            <temperature>0.6</temperature>
+            <top-p>0.95</top-p>
+            <top-k>20</top-k>
+        </runtime>
+        <mtp available="false"/>
+        <use-cases><case>coding</case><case>reasoning</case><case>agentic</case></use-cases>
+    </model>
+
     <model id="qwopus-3.5-4b-coder-mtp-q4_k_m" section="mtp">
         <display-name>Qwopus 3.5 4B Coder (MTP)</display-name>
         <tagline>Fast coding assistant with MTP speculative decoding. Great on ≥ 16 GB Macs.</tagline>
